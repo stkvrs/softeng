@@ -22,6 +22,8 @@ class CustomJSONEncoder(JSONEncoder):
             return obj.strftime('%d-%m-%Y %H:%M:%S %Z')
         elif isinstance(obj, date):
             return obj.strftime('%d-%m-%Y')
+        elif isinstance(obj, bytes):
+            return obj.decode('utf-8')
         elif isinstance(obj, json.JSONEncoder):
             return obj.default(obj)
         try:

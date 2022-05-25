@@ -26,6 +26,7 @@ class ImageUploadAPI(Resource):
 
         mongo.db.users.update_one({"_id": ObjectId(user_id)}, {"$set": {"img": base64_str}})
 
-        result = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+        user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
 
-        return make_response(jsonify(result), 204)
+        return make_response(jsonify(user), 200)
+
