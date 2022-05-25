@@ -8,15 +8,15 @@ from extensions import mongo
 
 class ImageUploadAPI(Resource):
     def __init__(self):
-        self.put_reqparse = reqparse.RequestParser()
+        self.post_reqparse = reqparse.RequestParser()
 
-        self.put_reqparse.add_argument("image", type=FileStorage, location="files")
-        self.put_reqparse.add_argument("id", type=str, required=True, location="args")
+        self.post_reqparse.add_argument("image", type=FileStorage, location="files")
+        self.post_reqparse.add_argument("id", type=str, required=True, location="args")
         super(ImageUploadAPI, self).__init__()
 
-    def put(self):
+    def post(self):
 
-        args = self.put_reqparse.parse_args()
+        args = self.post_reqparse.parse_args()
 
         user_id = args['id']
 
