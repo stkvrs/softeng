@@ -5,6 +5,7 @@ import logging
 
 from dotenv import load_dotenv
 from flask import Flask
+from flask_cors import CORS
 from flask.json import JSONEncoder
 from bson.objectid import ObjectId
 from flask_restful import Api
@@ -32,6 +33,7 @@ load_dotenv()
 
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
 ###### Configuration ##########
