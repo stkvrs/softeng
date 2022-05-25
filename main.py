@@ -11,6 +11,7 @@ from bson.objectid import ObjectId
 from flask_restful import Api
 from extensions import mongo
 from api.users import CreateUserAPI, LoginUserAPI, GetAllUsersAPI
+from api.upload_image import ImageUploadAPI
 
 class CustomJSONEncoder(JSONEncoder):
     """Custom JSON Encoder which can handle mongo types like ObjectId"""
@@ -46,6 +47,7 @@ mongo.init_app(app)
 api.add_resource(CreateUserAPI, "/api/register")
 api.add_resource(LoginUserAPI, "/api/login")
 api.add_resource(GetAllUsersAPI, "/api/users")
+api.add_resource(ImageUploadAPI, "/api/upload")
 
 if __name__ == "__main__":
     app.run(debug=True)

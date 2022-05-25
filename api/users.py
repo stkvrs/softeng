@@ -1,6 +1,3 @@
-import json
-from textwrap import indent
-import uuid
 from flask_restful import Resource, reqparse
 from flask import jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -36,7 +33,7 @@ class CreateUserAPI(Resource):
             "hobbies", type=list, required=False, location="json"
         )
         self.post_reqparse.add_argument(
-            "imgUrl", type=str, required=False, location="json"
+            "img", type=str, required=False, location="json"
         )
 
         super(CreateUserAPI, self).__init__()
@@ -53,7 +50,7 @@ class CreateUserAPI(Resource):
         grad_date = args["grad_date"]
         description = args["description"]
         hobbies = args["hobbies"]
-        imgUrl = args["imgUrl"]
+        img = args["img"]
 
         if password is not None:
             hashed_password = generate_password_hash(password)
@@ -67,7 +64,7 @@ class CreateUserAPI(Resource):
             "grad_date": grad_date,
             "description": description,
             "hobbies": hobbies,
-            "imgUrl": imgUrl,
+            "img": img,
             "role": 3
         }
 
