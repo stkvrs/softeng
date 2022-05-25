@@ -1,3 +1,5 @@
+import json
+from textwrap import indent
 import uuid
 from flask_restful import Resource, reqparse
 from flask import jsonify, make_response
@@ -107,3 +109,30 @@ class LoginUserAPI(Resource):
             return make_response(jsonify({"Error": "Email and/or password provided are not correct"}), 400)
 
         return make_response(jsonify(user), 200)
+
+
+class GetAllUsersAPI(Resource):
+    def __init__(self):
+        self.get_reqparse = reqparse.RequestParser()
+
+        self.get_reqparse.add_argument("role", type=int, location="args")
+
+        super(GetAllUsersAPI, self).__init__()
+
+    def get(self):
+
+        args = self.get_reqparse.parse_args()
+
+        role = args['role']
+
+        users = None
+
+        if role:
+            users = mongo.db.users.find({"role": role})
+        else:
+            users = mongo.db.users.find({})
+
+        result = [user for user in users]
+
+        return make_response(jsonify(result), 200)
+
