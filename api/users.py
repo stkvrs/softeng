@@ -66,6 +66,7 @@ class CreateUserAPI(Resource):
             "description": description,
             "hobbies": hobbies,
             "imgUrl": imgUrl,
+            "role": 3
         }
 
         # Check if email already exists
