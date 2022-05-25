@@ -53,8 +53,6 @@ class CreateUserAPI(Resource):
         hobbies = args["hobbies"]
         imgUrl = args["imgUrl"]
 
-        print(args)
-
         if password is not None:
             hashed_password = generate_password_hash(password)
 
