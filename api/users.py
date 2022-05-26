@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask_restful import Resource, reqparse
 from flask import jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -24,6 +25,9 @@ class CreateUserAPI(Resource):
             "degree", type=str, required=False, location="json"
         )
         self.post_reqparse.add_argument(
+            "school", type=str, required=False, location="json"
+        )
+        self.post_reqparse.add_argument(
             "grad_date", type=str, required=False, location="json"
         )
         self.post_reqparse.add_argument(
@@ -47,6 +51,7 @@ class CreateUserAPI(Resource):
         email = args["email"]
         password = args["password"]
         degree = args["degree"]
+        school = args["school"]
         grad_date = args["grad_date"]
         description = args["description"]
         hobbies = args["hobbies"]
@@ -61,11 +66,12 @@ class CreateUserAPI(Resource):
             "email": email,
             "password": hashed_password,
             "degree": degree,
+            "school": school,
             "grad_date": grad_date,
             "description": description,
             "hobbies": hobbies,
             "img": img,
-            "role": 3
+            "role": 3,
         }
 
         # Check if email already exists
@@ -102,8 +108,13 @@ class LoginUserAPI(Resource):
         if user is None:
             return make_response(jsonify({"Error": "The user doen't exist"}), 400)
 
-        if email != user['email'] or not check_password_hash(user['password'], password):
-            return make_response(jsonify({"Error": "Email and/or password provided are not correct"}), 400)
+        if email != user["email"] or not check_password_hash(
+            user["password"], password
+        ):
+            return make_response(
+                jsonify({"Error": "Email and/or password provided are not correct"}),
+                400,
+            )
 
         return make_response(jsonify(user), 200)
 
@@ -120,7 +131,7 @@ class GetAllUsersAPI(Resource):
 
         args = self.get_reqparse.parse_args()
 
-        role = args['role']
+        role = args["role"]
 
         users = None
 
@@ -132,4 +143,87 @@ class GetAllUsersAPI(Resource):
         result = [user for user in users]
 
         return make_response(jsonify(result), 200)
+
+
+class UpdateUserAPI(Resource):
+    def __init__(self):
+        self.put_reqparse = reqparse.RequestParser()
+
+        self.put_reqparse.add_argument("id", type=str, required=True, location="json")
+
+        self.put_reqparse.add_argument(
+            "first_name", type=str, required=False, location="json"
+        )
+        self.put_reqparse.add_argument(
+            "last_name", type=str, required=False, location="json"
+        )
+        self.put_reqparse.add_argument(
+            "degree", type=str, required=False, location="json"
+        )
+        self.put_reqparse.add_argument(
+            "school", type=str, required=False, location="json"
+        )
+        self.put_reqparse.add_argument(
+            "grad_date", type=str, required=False, location="json"
+        )
+        self.put_reqparse.add_argument(
+            "description", type=str, required=False, location="json"
+        )
+        self.put_reqparse.add_argument(
+            "hobbies", type=list, required=False, location="json"
+        )
+        self.put_reqparse.add_argument("img", type=str, required=False, location="json")
+
+        super(UpdateUserAPI, self).__init__()
+
+    def put(self):
+
+        args = self.put_reqparse.parse_args()
+        user_id = args["id"]
+        first_name = args["first_name"]
+        last_name = args["last_name"]
+        degree = args["degree"]
+        school = args["school"]
+        grad_date = args["grad_date"]
+        description = args["description"]
+        hobbies = args["hobbies"]
+        img = args["img"]
+
+        result_dict = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "degree": degree,
+            "school": school,
+            "grad_date": grad_date,
+            "description": description,
+            "hobbies": hobbies,
+            "img": img,
+        }
+
+        mongo.db.users.update_one({"_id": ObjectId(user_id)}, {"$set": result_dict})
+
+        user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+
+        return make_response(jsonify(user), 200)
+
+
+class DeleteUserAPI(Resource):
+    def __init__(self):
+        self.delete_reqparse = reqparse.RequestParser()
+
+        self.delete_reqparse.add_argument(
+            "id", type=str, required=True, location="json"
+        )
+
+    def delete(self):
+
+        args = self.delete_reqparse.parse_args()
+
+        user_id = args['id']
+
+        user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+
+        mongo.db.users.delete_one({"_id": ObjectId(user_id)})
+
+        return make_response(jsonify(user), 200)
 

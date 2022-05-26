@@ -11,7 +11,7 @@ from bson.objectid import ObjectId
 from flask_restful import Api
 from api.admin.update_role import UpdateUserRoleAPI
 from extensions import mongo
-from api.users import CreateUserAPI, LoginUserAPI, GetAllUsersAPI
+from api.users import CreateUserAPI, DeleteUserAPI, LoginUserAPI, GetAllUsersAPI, UpdateUserAPI
 from api.upload_image import ImageUploadAPI
 
 class CustomJSONEncoder(JSONEncoder):
@@ -52,6 +52,8 @@ api.add_resource(LoginUserAPI, "/api/login")
 api.add_resource(GetAllUsersAPI, "/api/users")
 api.add_resource(ImageUploadAPI, "/api/upload")
 api.add_resource(UpdateUserRoleAPI, "/api/admin/users")
+api.add_resource(UpdateUserAPI, "/api/users/update")
+api.add_resource(DeleteUserAPI, "/api/users/delete")
 
 if __name__ == "__main__":
     app.run(debug=True)
