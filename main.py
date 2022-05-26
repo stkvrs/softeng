@@ -9,6 +9,7 @@ from flask_cors import CORS
 from flask.json import JSONEncoder
 from bson.objectid import ObjectId
 from flask_restful import Api
+from api.admin.update_role import UpdateUserRoleAPI
 from extensions import mongo
 from api.users import CreateUserAPI, LoginUserAPI, GetAllUsersAPI
 from api.upload_image import ImageUploadAPI
@@ -50,6 +51,7 @@ api.add_resource(CreateUserAPI, "/api/register")
 api.add_resource(LoginUserAPI, "/api/login")
 api.add_resource(GetAllUsersAPI, "/api/users")
 api.add_resource(ImageUploadAPI, "/api/upload")
+api.add_resource(UpdateUserRoleAPI, "/api/admin/users")
 
 if __name__ == "__main__":
     app.run(debug=True)
